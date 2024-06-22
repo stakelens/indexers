@@ -1,7 +1,7 @@
 use ghost_crab::prelude::*;
 
 #[handler(RocketPool.MinipoolCreated)]
-async fn MinipoolCreatedHandler(ctx: Context) {
+async fn MinipoolCreated(ctx: Context) {
     println!("Log: {:?}n", ctx.log);
 }
 
