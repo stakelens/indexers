@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 ghost_crab = { path = "../ghost-crab" }
 tokio = { version = "1.37.0", features = ["full"] }
+sqlx = { version = "0.7.4", features = ["runtime-tokio", "sqlite"] }

@@ -1,8 +1,14 @@
-use std::time::Duration;
+mod db;
 mod handlers;
+
+use ghost_crab::prelude::*;
+use handlers::rocketpool;
 
 #[tokio::main]
 async fn main() {
-    handlers::rocketpool::MinipoolCreated::init();
-    tokio::time::sleep(Duration::from_secs(1000)).await
+    let mut indexer = ghost_crab::Indexer::new();
+
+    indexer.load(rocketpool::MinipoolCreated::new()).await;
+
+    indexer.start().await;
 }
