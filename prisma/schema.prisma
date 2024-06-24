@@ -11,7 +11,20 @@ datasource db {
 }
 
 model RocketPoolTVL {
-  block_number BigInt @id @default(autoincrement())
-  eth          BigInt
-  rpl          BigInt
+  block_number    BigInt
+  log_index       BigInt
+
+  eth BigInt
+  rpl BigInt
+
+  @@unique([block_number, log_index])
+}
+
+model EtherFi {
+  block_number    BigInt
+  log_index       BigInt
+
+  tvl BigInt
+
+  @@unique([block_number, log_index])
 }

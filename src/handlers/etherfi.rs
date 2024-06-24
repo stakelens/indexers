@@ -1,58 +1,28 @@
-// use crate::{
-//     db::{add_etherfi_tvl, AddEtherfiTVL},
-//     indexer::{Handleable, Context},
-// };
-// use alloy::{rpc::types::eth::BlockNumberOrTag, sol, sol_types::SolEvent};
-// use async_trait::async_trait;
+use ghost_crab::prelude::*;
 
-// sol!(
-//     #[sol(rpc)]
-//     TVLOracle,
-//     "abis/etherfi/TVLOracle.json"
-// );
+use crate::db;
 
-// #[derive(Clone)]
-// pub struct EtherfiHandler;
+#[handler(EtherFi.TVLUpdated)]
+async fn EtherFiTVLUpdated(ctx: Context) {
+    let decoded_log = ctx
+        .log
+        .log_decode::<EtherFiTVLUpdatedContract::TVLUpdated>()
+        .unwrap();
+    let data = decoded_log.data();
 
-// impl EtherfiHandler {
-//     pub fn new() -> Box<EtherfiHandler> {
-//         Box::new(EtherfiHandler {})
-//     }
-// }
+    let block_number = ctx.log.block_number.unwrap().to_string();
+    let current_tvl = data._currentTvl.to_string();
+    let log_index = ctx.log.log_index.unwrap().to_string();
 
-// #[async_trait]
-// impl Handleable for EtherfiHandler {
-//     async fn handle(&self, params: Context) {
-//         let blocknumber = params.log.block_number.unwrap();
+    let db = db::get().await;
 
-//         let tvl_oracle_contract = TVLOracle::new(
-//             "0x6329004E903B7F420245E7aF3f355186f2432466"
-//                 .parse()
-//                 .unwrap(),
-//             &params.provider,
-//         );
-
-//         let tvl = tvl_oracle_contract
-//             .getTvl()
-//             .block(alloy::rpc::types::eth::BlockId::Number(
-//                 BlockNumberOrTag::Number(blocknumber),
-//             ))
-//             .call()
-//             .await
-//             .unwrap();
-
-//         println!("Blocknumber: {}", blocknumber);
-//         println!("TVL: {}", tvl._0);
-
-//         let blocknumber = blocknumber as i64;
-//         let mut conn = params.conn.lock().unwrap();
-
-//         add_etherfi_tvl(
-//             &mut conn,
-//             AddEtherfiTVL {
-//                 eth: tvl._0.to_string(),
-//                 blocknumber,
-//             },
-//         );
-//     }
-// }
+    sqlx::query!(
+        "insert into EtherFi (block_number, log_index, tvl) values (?, ?, ?)",
+        block_number,
+        log_index,
+        current_tvl
+    )
+    .execute(db)
+    .await
+    .unwrap();
+}

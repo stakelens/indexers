@@ -6,6 +6,12 @@
             "address": "0x6d010c43d4e96d74c422f2e27370af48711b49bf",
             "abi": "abis/rocketpool/RocketMinipoolManager.json",
             "network": "ethereum"
+        },
+        "EtherFi": {
+            "startBlock": 105927637,
+            "address": "0x6329004E903B7F420245E7aF3f355186f2432466",
+            "abi": "abis/etherfi/TVLOracle.json",
+            "network": "optimism"
         }
     },
     "templates": {

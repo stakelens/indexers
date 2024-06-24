@@ -22,28 +22,28 @@ sol!(
 );
 
 #[handler(RocketPool.MinipoolCreated)]
-async fn MinipoolCreated(params: Context) {
-    let blocknumber = params.log.block_number.unwrap();
+async fn MinipoolCreated(ctx: Context) {
+    let blocknumber = ctx.log.block_number.unwrap();
 
     let rocket_vault_contract = RocketVault::new(
         "0x3bdc69c4e5e13e52a65f5583c23efb9636b469d6"
             .parse()
             .unwrap(),
-        &params.provider,
+        &ctx.provider,
     );
 
     let rocket_minipool_manager_contract = RocketMinipoolManager::new(
         "0x6d010c43d4e96d74c422f2e27370af48711b49bf"
             .parse()
             .unwrap(),
-        &params.provider,
+        &ctx.provider,
     );
 
     let rocket_node_staking_contract = RocketNodeStaking::new(
         "0x0d8d8f8541b12a0e1194b7cc4b6d954b90ab82ec"
             .parse()
             .unwrap(),
-        &params.provider,
+        &ctx.provider,
     );
 
     let mut total_eth: Uint<256, 4> = Uint::from(0);
@@ -151,12 +151,14 @@ async fn MinipoolCreated(params: Context) {
     let blocknumber = blocknumber.to_string();
     let total_eth = total_eth.to_string();
     let total_rpl = total_rpl.to_string();
+    let log_index = ctx.log.log_index.unwrap().to_string();
 
     sqlx::query!(
-        "insert into RocketPoolTVL (block_number, eth, rpl) values (?,?,?)",
+        "insert into RocketPoolTVL (block_number, eth, rpl, log_index) values (?,?,?,?)",
         blocknumber,
         total_eth,
-        total_rpl
+        total_rpl,
+        log_index
     )
     .execute(db)
     .await
