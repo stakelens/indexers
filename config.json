@@ -12,11 +12,17 @@
             "address": "0x6329004E903B7F420245E7aF3f355186f2432466",
             "abi": "abis/etherfi/TVLOracle.json",
             "network": "optimism"
+        },
+        "VaultsRegistry": {
+            "startBlock": 18470079,
+            "address": "0x3a0008a588772446f6e656133C2D5029CC4FC20E",
+            "abi": "abis/stakewise/VaultsRegistry.json",
+            "network": "ethereum"
         }
     },
     "templates": {
         "ETHVault": { 
-            "abi": "abis/rocketpool/RocketMinipoolManager.json",
+            "abi": "abis/stakewise/EthVault.json",
             "network": "ethereum"
         }
     },

@@ -11,8 +11,8 @@ datasource db {
 }
 
 model RocketPoolTVL {
-  block_number    BigInt
-  log_index       BigInt
+  block_number BigInt
+  log_index    BigInt
 
   eth BigInt
   rpl BigInt
@@ -21,10 +21,20 @@ model RocketPoolTVL {
 }
 
 model EtherFi {
-  block_number    BigInt
-  log_index       BigInt
+  block_number BigInt
+  log_index    BigInt
 
   tvl BigInt
+
+  @@unique([block_number, log_index])
+}
+
+model StakeWise {
+  block_number BigInt
+  log_index    BigInt
+
+  vault String
+  eth   BigInt
 
   @@unique([block_number, log_index])
 }
