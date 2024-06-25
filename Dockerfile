@@ -7,6 +7,7 @@ COPY ./src ./src
 RUN cargo chef prepare
 
 FROM chef AS builder
+RUN apt-get update && apt-get install -y libclang-dev
 COPY --from=planner /app/recipe.json .
 RUN cargo chef cook --release
 COPY . .
