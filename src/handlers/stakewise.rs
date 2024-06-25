@@ -4,17 +4,10 @@ use crate::db;
 
 #[handler(ETHVault.Deposited)]
 async fn ETHVaultDeposited(ctx: Context) {
-    let decoded_log = ctx
-        .log
-        .log_decode::<ETHVaultDepositedContract::Deposited>()
-        .unwrap();
-
-    let data = decoded_log.data();
-
     let block_number = ctx.log.block_number.unwrap().to_string();
     let log_index = ctx.log.log_index.unwrap().to_string();
-    let vault = data.receiver.to_string();
-    let eth = data.assets.to_string();
+    let vault = event.receiver.to_string();
+    let eth = event.assets.to_string();
 
     let db = db::get().await;
 
@@ -32,17 +25,10 @@ async fn ETHVaultDeposited(ctx: Context) {
 
 #[handler(ETHVault.Redeemed)]
 async fn ETHVaultRedeemed(ctx: Context) {
-    let decoded_log = ctx
-        .log
-        .log_decode::<ETHVaultRedeemedContract::Redeemed>()
-        .unwrap();
-
-    let data = decoded_log.data();
-
     let block_number = ctx.log.block_number.unwrap().to_string();
     let log_index = ctx.log.log_index.unwrap().to_string();
-    let vault = data.owner.to_string();
-    let eth = format!("-{}", data.assets.to_string());
+    let vault = event.owner.to_string();
+    let eth = format!("-{}", event.assets.to_string());
 
     let db = db::get().await;
 
@@ -60,14 +46,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
 
 #[handler(VaultsRegistry.VaultAdded)]
 async fn VaultsRegistry(ctx: Context) {
-    let decoded_log = ctx
-        .log
-        .log_decode::<VaultsRegistryContract::VaultAdded>()
-        .unwrap();
-
-    let data = decoded_log.data();
-
-    let vault = data.vault.to_string();
+    let vault = event.vault.to_string();
 
     ctx.templates
         .start(Template {
