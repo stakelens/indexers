@@ -2,4 +2,4 @@
 .env
 cache
 node_modules
-*.db
+*.db*
