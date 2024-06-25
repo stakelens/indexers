@@ -6,11 +6,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:test.db"
+  provider = "postgres"
+  url      =  env("DATABASE_URL")
 }
 
-model RocketPoolTVL {
+model RocketPool {
   block_number BigInt
   log_index    BigInt
 

@@ -4,15 +4,15 @@ use crate::db;
 
 #[handler(ETHVault.Deposited)]
 async fn ETHVaultDeposited(ctx: Context) {
-    let block_number = ctx.log.block_number.unwrap().to_string();
-    let log_index = ctx.log.log_index.unwrap().to_string();
+    let block_number = ctx.log.block_number.unwrap() as i64;
+    let log_index = ctx.log.log_index.unwrap() as i64;
     let vault = event.receiver.to_string();
-    let eth = event.assets.to_string();
+    let eth = -(event.assets.to::<i64>());
 
     let db = db::get().await;
 
     sqlx::query!(
-        "insert into StakeWise (block_number, log_index, vault, eth) values (?,?,?,?)",
+        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
         block_number,
         log_index,
         vault,
@@ -25,15 +25,15 @@ async fn ETHVaultDeposited(ctx: Context) {
 
 #[handler(ETHVault.Redeemed)]
 async fn ETHVaultRedeemed(ctx: Context) {
-    let block_number = ctx.log.block_number.unwrap().to_string();
-    let log_index = ctx.log.log_index.unwrap().to_string();
+    let block_number = ctx.log.block_number.unwrap() as i64;
+    let log_index = ctx.log.log_index.unwrap() as i64;
     let vault = event.owner.to_string();
-    let eth = format!("-{}", event.assets.to_string());
+    let eth = event.assets.to::<i64>();
 
     let db = db::get().await;
 
     sqlx::query!(
-        "insert into StakeWise (block_number, log_index, vault, eth) values (?,?,?,?)",
+        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
         block_number,
         log_index,
         vault,

@@ -143,13 +143,13 @@ async fn MinipoolCreated(ctx: Context) {
 
     let db = db::get().await;
 
-    let blocknumber = blocknumber.to_string();
-    let total_eth = total_eth.to_string();
-    let total_rpl = total_rpl.to_string();
-    let log_index = ctx.log.log_index.unwrap().to_string();
+    let blocknumber = blocknumber as i64;
+    let total_eth = total_eth.to::<i64>();
+    let total_rpl = total_rpl.to::<i64>();
+    let log_index = ctx.log.log_index.unwrap() as i64;
 
     sqlx::query!(
-        "insert into RocketPoolTVL (block_number, eth, rpl, log_index) values (?,?,?,?)",
+        r#"insert into "RocketPool" (block_number, eth, rpl, log_index) values ($1,$2,$3,$4)"#,
         blocknumber,
         total_eth,
         total_rpl,

@@ -1360,7 +1360,7 @@ dependencies = [
 [[package]]
 name = "ghost_crab"
 version = "0.1.0"
-source = "git+https://github.com/vistastaking/ghost-crab.git#7961fe1e97928e1ed7e7a7c05e49a28b4d850e41"
+source = "git+https://github.com/vistastaking/ghost-crab.git#f35c29c8502ffd863026b3f23db5ca0fe729e243"
 dependencies = [
  "alloy",
  "async-trait",
@@ -1639,7 +1639,7 @@ dependencies = [
 [[package]]
 name = "indexer-macros"
 version = "0.1.0"
-source = "git+https://github.com/vistastaking/ghost-crab.git#7961fe1e97928e1ed7e7a7c05e49a28b4d850e41"
+source = "git+https://github.com/vistastaking/ghost-crab.git#f35c29c8502ffd863026b3f23db5ca0fe729e243"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1652,6 +1652,7 @@ dependencies = [
 name = "indexers"
 version = "0.1.0"
 dependencies = [
+ "dotenvy",
  "ghost_crab",
  "sqlx",
  "tokio",
@@ -2928,6 +2929,7 @@ dependencies = [
  "sha2",
  "sqlx-core",
  "sqlx-mysql",
+ "sqlx-postgres",
  "sqlx-sqlite",
  "syn 1.0.109",
  "tempfile",
