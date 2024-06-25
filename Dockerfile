@@ -18,5 +18,6 @@ RUN cargo build --release --bin indexers
 FROM debian:bookworm-slim AS runtime
 RUN apt-get update && apt install -y openssl
 WORKDIR /app
+COPY --from=builder /app/config.json /usr/local/bin/config.json
 COPY --from=builder /app/target/release/indexers /usr/local/bin
 CMD ["/usr/local/bin/indexers"]
