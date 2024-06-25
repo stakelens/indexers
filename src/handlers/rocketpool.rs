@@ -58,7 +58,6 @@ async fn MinipoolCreated(ctx: Context) {
     let mut withdrawable_minipools: Uint<256, 4> = Uint::from(0);
 
     loop {
-        println!("Get minipools: {} {}", offset, limit);
         let active_minipools = rocket_minipool_manager_contract
             .getMinipoolCountPerStatus(Uint::from(offset), Uint::from(limit))
             .block(alloy::rpc::types::eth::BlockId::Number(
@@ -141,10 +140,6 @@ async fn MinipoolCreated(ctx: Context) {
         .unwrap();
 
     total_rpl += rocket_auction_manager_rpl_balance._0;
-
-    println!("Blocknumber: {}", blocknumber);
-    println!("Total ETH: {}", total_eth);
-    println!("Total RPL: {}", total_rpl);
 
     let db = db::get().await;
 

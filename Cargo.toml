@@ -2,7 +2,7 @@
 name = "indexers"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.79"
+rust-version = "1.78"
 
 [dependencies]
 ghost_crab = { git = "https://github.com/vistastaking/ghost-crab.git" }
