@@ -16,7 +16,7 @@ RUN cargo build --release --bin indexers
 
 # You do not need the Rust toolchain to run the binary!
 FROM debian:bookworm-slim AS runtime
-RUN apt-get update
+RUN apt-get update && apt-get upgrade
 WORKDIR /app
 COPY --from=builder /app/config.json ./config.json
 COPY --from=builder /app/target/release/indexers /usr/local/bin
