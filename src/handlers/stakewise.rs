@@ -7,7 +7,7 @@ async fn ETHVaultDeposited(ctx: Context) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let log_index = ctx.log.log_index.unwrap() as i64;
     let vault = event.receiver.to_string();
-    let eth = -(event.assets.to::<i64>());
+    let eth = event.assets.to::<i64>();
 
     let db = db::get().await;
 
@@ -28,7 +28,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let log_index = ctx.log.log_index.unwrap() as i64;
     let vault = event.owner.to_string();
-    let eth = event.assets.to::<i64>();
+    let eth = -(event.assets.to::<i64>());
 
     let db = db::get().await;
 
