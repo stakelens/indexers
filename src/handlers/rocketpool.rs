@@ -144,8 +144,8 @@ async fn MinipoolCreated(ctx: Context) {
     let db = db::get().await;
 
     let blocknumber = blocknumber as i64;
-    let total_eth = total_eth.to::<i64>();
-    let total_rpl = total_rpl.to::<i64>();
+    let total_eth = total_eth.to_string();
+    let total_rpl = total_rpl.to_string();
     let log_index = ctx.log.log_index.unwrap() as i64;
 
     sqlx::query!(

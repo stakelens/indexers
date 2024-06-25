@@ -14,8 +14,8 @@ model RocketPool {
   block_number BigInt
   log_index    BigInt
 
-  eth BigInt
-  rpl BigInt
+  eth String
+  rpl String
 
   @@unique([block_number, log_index])
 }
@@ -24,7 +24,7 @@ model EtherFi {
   block_number BigInt
   log_index    BigInt
 
-  tvl BigInt
+  tvl String
 
   @@unique([block_number, log_index])
 }
@@ -34,7 +34,7 @@ model StakeWise {
   log_index    BigInt
 
   vault String
-  eth   BigInt
+  eth   String
 
   @@unique([block_number, log_index])
 }
