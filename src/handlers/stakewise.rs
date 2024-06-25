@@ -12,7 +12,7 @@ async fn ETHVaultDeposited(ctx: Context) {
     let db = db::get().await;
 
     sqlx::query!(
-        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
+        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4) ON CONFLICT (block_number, log_index) DO NOTHING"#,
         block_number,
         log_index,
         vault,
