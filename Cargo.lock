@@ -1360,6 +1360,7 @@ dependencies = [
 [[package]]
 name = "ghost_crab"
 version = "0.1.0"
+source = "git+https://github.com/vistastaking/ghost-crab.git#7961fe1e97928e1ed7e7a7c05e49a28b4d850e41"
 dependencies = [
  "alloy",
  "async-trait",
@@ -1638,6 +1639,7 @@ dependencies = [
 [[package]]
 name = "indexer-macros"
 version = "0.1.0"
+source = "git+https://github.com/vistastaking/ghost-crab.git#7961fe1e97928e1ed7e7a7c05e49a28b4d850e41"
 dependencies = [
  "proc-macro2",
  "quote",
