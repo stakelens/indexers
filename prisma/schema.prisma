@@ -7,12 +7,13 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      =  env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model RocketPool {
-  block_number BigInt
-  log_index    BigInt
+  block_number    BigInt
+  block_timestamp BigInt
+  log_index       BigInt
 
   eth String
   rpl String
@@ -21,8 +22,9 @@ model RocketPool {
 }
 
 model EtherFi {
-  block_number BigInt
-  log_index    BigInt
+  block_number    BigInt
+  block_timestamp BigInt
+  log_index       BigInt
 
   tvl String
 
@@ -30,8 +32,9 @@ model EtherFi {
 }
 
 model StakeWise {
-  block_number BigInt
-  log_index    BigInt
+  block_number    BigInt
+  block_timestamp BigInt
+  log_index       BigInt
 
   vault String
   eth   String

@@ -23,7 +23,7 @@ sol!(
 
 #[handler(RocketPool.MinipoolCreated)]
 async fn MinipoolCreated(ctx: Context) {
-    let blocknumber = ctx.log.block_number.unwrap();
+    let block_number = ctx.log.block_number.unwrap();
 
     let rocket_vault_contract = RocketVault::new(
         "0x3bdc69c4e5e13e52a65f5583c23efb9636b469d6"
@@ -61,7 +61,7 @@ async fn MinipoolCreated(ctx: Context) {
         let active_minipools = rocket_minipool_manager_contract
             .getMinipoolCountPerStatus(Uint::from(offset), Uint::from(limit))
             .block(alloy::rpc::types::eth::BlockId::Number(
-                BlockNumberOrTag::Number(blocknumber),
+                BlockNumberOrTag::Number(block_number),
             ))
             .call()
             .await
@@ -100,7 +100,7 @@ async fn MinipoolCreated(ctx: Context) {
     let rocket_deposit_pool_eth = rocket_vault_contract
         .balanceOf(String::from("rocketDepositPool"))
         .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(blocknumber),
+            BlockNumberOrTag::Number(block_number),
         ))
         .call()
         .await
@@ -111,7 +111,7 @@ async fn MinipoolCreated(ctx: Context) {
     let total_rpl_stacked = rocket_node_staking_contract
         .getTotalRPLStake()
         .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(blocknumber),
+            BlockNumberOrTag::Number(block_number),
         ))
         .call()
         .await
@@ -122,7 +122,7 @@ async fn MinipoolCreated(ctx: Context) {
     let rocket_dao_node_trusted_actions_rpl_balance = rocket_vault_contract
         .balanceOf(String::from("rocketDAONodeTrustedActions"))
         .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(blocknumber),
+            BlockNumberOrTag::Number(block_number),
         ))
         .call()
         .await
@@ -133,7 +133,7 @@ async fn MinipoolCreated(ctx: Context) {
     let rocket_auction_manager_rpl_balance = rocket_vault_contract
         .balanceOf(String::from("rocketAuctionManager"))
         .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(blocknumber),
+            BlockNumberOrTag::Number(block_number),
         ))
         .call()
         .await
@@ -143,17 +143,36 @@ async fn MinipoolCreated(ctx: Context) {
 
     let db = db::get().await;
 
-    let blocknumber = blocknumber as i64;
+    let block_number = block_number as i64;
     let total_eth = total_eth.to_string();
     let total_rpl = total_rpl.to_string();
     let log_index = ctx.log.log_index.unwrap() as i64;
 
+<<<<<<< HEAD
     let _ = sqlx::query!(
         r#"insert into "RocketPool" (block_number, eth, rpl, log_index) values ($1,$2,$3,$4) ON CONFLICT (block_number, log_index) DO NOTHING"#,
         blocknumber,
+=======
+    let block = ctx
+        .provider
+        .get_block_by_number(
+            BlockNumberOrTag::Number(ctx.log.block_number.unwrap()),
+            false,
+        )
+        .await
+        .unwrap()
+        .unwrap();
+
+    let block_timestamp = block.header.timestamp as i64;
+
+    sqlx::query!(
+        r#"insert into "RocketPool" (block_number, block_timestamp, log_index, eth, rpl) values ($1,$2,$3,$4,$5)"#,
+        block_number,
+        block_timestamp,
+        log_index,
+>>>>>>> f272a86 (Adds block_timestamp)
         total_eth,
         total_rpl,
-        log_index
     )
     .execute(db)
     .await;

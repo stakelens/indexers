@@ -1,3 +1,4 @@
+use alloy::eips::BlockNumberOrTag;
 use ghost_crab::prelude::*;
 
 use crate::db;
@@ -9,11 +10,24 @@ async fn ETHVaultDeposited(ctx: Context) {
     let vault = event.receiver.to_string();
     let eth = event.assets.to_string();
 
+    let block = ctx
+        .provider
+        .get_block_by_number(
+            BlockNumberOrTag::Number(ctx.log.block_number.unwrap()),
+            false,
+        )
+        .await
+        .unwrap()
+        .unwrap();
+
+    let block_timestamp = block.header.timestamp as i64;
+
     let db = db::get().await;
 
-    let _ = sqlx::query!(
-        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4) ON CONFLICT (block_number, log_index) DO NOTHING"#,
+    sqlx::query!(
+        r#"insert into "StakeWise" (block_number, block_timestamp, log_index, vault, eth) values ($1,$2,$3,$4,$5)"#,
         block_number,
+        block_timestamp,
         log_index,
         vault,
         eth
@@ -29,11 +43,24 @@ async fn ETHVaultRedeemed(ctx: Context) {
     let vault = event.owner.to_string();
     let eth = format!("-{}", event.assets.to_string());
 
+    let block = ctx
+        .provider
+        .get_block_by_number(
+            BlockNumberOrTag::Number(ctx.log.block_number.unwrap()),
+            false,
+        )
+        .await
+        .unwrap()
+        .unwrap();
+
+    let block_timestamp = block.header.timestamp as i64;
+
     let db = db::get().await;
 
-    let _ = sqlx::query!(
+    sqlx::query!(
         r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
         block_number,
+        block_timestamp,
         log_index,
         vault,
         eth
