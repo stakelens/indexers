@@ -22,7 +22,7 @@ async fn EtherFiTVLUpdated(ctx: Context) {
     let db = db::get().await;
 
     sqlx::query!(
-        r#"insert into "EtherFi" (block_number, block_timestamp, log_index, tvl) values ($1, $2, $3, $4)"#,
+        r#"insert into "EtherFi" (block_number, block_timestamp, log_index, eth) values ($1, $2, $3, $4)"#,
         block_number,
         block_timestamp,
         log_index,

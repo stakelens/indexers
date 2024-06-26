@@ -26,7 +26,7 @@ model EtherFi {
   block_timestamp BigInt
   log_index       BigInt
 
-  tvl String
+  eth String
 
   @@unique([block_number, log_index])
 }
