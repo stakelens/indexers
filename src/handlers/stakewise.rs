@@ -58,7 +58,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
     let db = db::get().await;
 
     sqlx::query!(
-        r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
+        r#"insert into "StakeWise" (block_number, block_timestamp, log_index, vault, eth) values ($1,$2,$3,$4,$5)"#,
         block_number,
         block_timestamp,
         log_index,

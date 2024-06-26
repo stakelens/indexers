@@ -148,11 +148,6 @@ async fn MinipoolCreated(ctx: Context) {
     let total_rpl = total_rpl.to_string();
     let log_index = ctx.log.log_index.unwrap() as i64;
 
-<<<<<<< HEAD
-    let _ = sqlx::query!(
-        r#"insert into "RocketPool" (block_number, eth, rpl, log_index) values ($1,$2,$3,$4) ON CONFLICT (block_number, log_index) DO NOTHING"#,
-        blocknumber,
-=======
     let block = ctx
         .provider
         .get_block_by_number(
@@ -170,7 +165,6 @@ async fn MinipoolCreated(ctx: Context) {
         block_number,
         block_timestamp,
         log_index,
->>>>>>> f272a86 (Adds block_timestamp)
         total_eth,
         total_rpl,
     )

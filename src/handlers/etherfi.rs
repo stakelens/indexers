@@ -21,13 +21,8 @@ async fn EtherFiTVLUpdated(ctx: Context) {
     let block_timestamp = block.header.timestamp as i64;
     let db = db::get().await;
 
-<<<<<<< HEAD
-    let _ =sqlx::query!(
-        r#"insert into "EtherFi" (block_number, log_index, tvl) values ($1, $2, $3) ON CONFLICT (block_number, log_index) DO NOTHING"#,
-=======
     sqlx::query!(
         r#"insert into "EtherFi" (block_number, block_timestamp, log_index, tvl) values ($1, $2, $3, $4)"#,
->>>>>>> f272a86 (Adds block_timestamp)
         block_number,
         block_timestamp,
         log_index,
