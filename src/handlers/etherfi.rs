@@ -29,5 +29,6 @@ async fn EtherFiTVLUpdated(ctx: Context) {
         current_tvl
     )
     .execute(db)
-    .await;
+    .await
+    .unwrap();
 }

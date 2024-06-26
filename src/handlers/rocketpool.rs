@@ -169,5 +169,6 @@ async fn MinipoolCreated(ctx: Context) {
         total_rpl,
     )
     .execute(db)
-    .await;
+    .await
+    .unwrap();
 }

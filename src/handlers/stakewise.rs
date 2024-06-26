@@ -33,7 +33,7 @@ async fn ETHVaultDeposited(ctx: Context) {
         eth
     )
     .execute(db)
-    .await;
+    .await.unwrap();
 }
 
 #[handler(ETHVault.Redeemed)]
@@ -66,7 +66,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
         eth
     )
     .execute(db)
-    .await;
+    .await.unwrap();
 }
 
 #[handler(VaultsRegistry.VaultAdded)]
