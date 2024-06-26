@@ -157,5 +157,12 @@ async fn MinipoolCreated(ctx: Context) {
     )
     .execute(db)
     .await
-    .unwrap();
+    .map_err(|e| {
+        if let sqlx::Error::Database(db_err) = &e {
+            if db_err.code().as_deref() == Some("23505") {
+                return Ok(());
+            }
+        }
+        Err(e)
+    }).unwrap();
 }

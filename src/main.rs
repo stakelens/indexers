@@ -2,9 +2,9 @@ mod db;
 mod handlers;
 
 use ghost_crab::prelude::*;
-use handlers::stakewise;
-use handlers::rocketpool;
 use handlers::etherfi;
+use handlers::rocketpool;
+use handlers::stakewise;
 
 #[tokio::main]
 async fn main() {
