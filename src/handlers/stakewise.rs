@@ -11,7 +11,7 @@ async fn ETHVaultDeposited(ctx: Context) {
 
     let db = db::get().await;
 
-    sqlx::query!(
+    let _ = sqlx::query!(
         r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4) ON CONFLICT (block_number, log_index) DO NOTHING"#,
         block_number,
         log_index,
@@ -19,15 +19,7 @@ async fn ETHVaultDeposited(ctx: Context) {
         eth
     )
     .execute(db)
-    .await
-    .map_err(|e| {
-        if let sqlx::Error::Database(db_err) = &e {
-            if db_err.code().as_deref() == Some("23505") {
-                return Ok(());
-            }
-        }
-        Err(e)
-    }).unwrap();
+    .await;
 }
 
 #[handler(ETHVault.Redeemed)]
@@ -39,7 +31,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
 
     let db = db::get().await;
 
-    sqlx::query!(
+    let _ = sqlx::query!(
         r#"insert into "StakeWise" (block_number, log_index, vault, eth) values ($1,$2,$3,$4)"#,
         block_number,
         log_index,
@@ -47,16 +39,7 @@ async fn ETHVaultRedeemed(ctx: Context) {
         eth
     )
     .execute(db)
-    .await
-    .map_err(|e| {
-        if let sqlx::Error::Database(db_err) = &e {
-            if db_err.code().as_deref() == Some("23505") {
-                return Ok(());
-            }
-        }
-        Err(e)
-    })
-    .unwrap();
+    .await;
 }
 
 #[handler(VaultsRegistry.VaultAdded)]
