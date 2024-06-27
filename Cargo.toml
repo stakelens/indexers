@@ -5,7 +5,7 @@ edition = "2021"
 rust-version = "1.78"
 
 [dependencies]
-ghost_crab = { git = "https://github.com/vistastaking/ghost-crab.git", branch = "main" }
+ghost-crab = { version = "0.1.0" }
 tokio = { version = "1.37.0", features = ["full"] }
 sqlx = { version = "0.7.4", features = ["runtime-tokio", "postgres"] }
 dotenvy = "0.15.7"
