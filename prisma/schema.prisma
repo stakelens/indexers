@@ -11,14 +11,11 @@ datasource db {
 }
 
 model RocketPool {
-  block_number    BigInt
+  block_number    BigInt @unique
   block_timestamp BigInt
-  log_index       BigInt
 
   eth String
   rpl String
-
-  @@unique([block_number, log_index])
 }
 
 model EtherFi {

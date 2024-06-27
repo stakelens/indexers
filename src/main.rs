@@ -10,9 +10,9 @@ use handlers::etherfi;
 async fn main() {
     let mut indexer = ghost_crab::Indexer::new();
 
-    indexer.load(stakewise::VaultsRegistry::new()).await;
-    indexer.load(rocketpool::MinipoolCreated::new()).await;
-    indexer.load(etherfi::EtherFiTVLUpdated::new()).await;
+    indexer.load_event_handler(stakewise::VaultsRegistry::new()).await;
+    indexer.load_event_handler(etherfi::EtherFiTVLUpdated::new()).await;
+    indexer.load_block_handler(rocketpool::RocketPoolBlockHandler::new()).await;
 
     indexer.start().await;
 }

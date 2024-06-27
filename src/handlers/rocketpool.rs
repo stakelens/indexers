@@ -21,9 +21,9 @@ sol!(
     "abis/rocketpool/RocketVault.json"
 );
 
-#[handler(RocketPool.MinipoolCreated)]
-async fn MinipoolCreated(ctx: Context) {
-    let block_number = ctx.log.block_number.unwrap();
+#[block_handler(RocketPool)]
+async fn RocketPoolBlockHandler(ctx: BlockContext) {
+    let block_number = ctx.block.header.number.unwrap();
 
     let rocket_vault_contract = RocketVault::new(
         "0x3bdc69c4e5e13e52a65f5583c23efb9636b469d6"
@@ -146,25 +146,12 @@ async fn MinipoolCreated(ctx: Context) {
     let block_number = block_number as i64;
     let total_eth = total_eth.to_string();
     let total_rpl = total_rpl.to_string();
-    let log_index = ctx.log.log_index.unwrap() as i64;
-
-    let block = ctx
-        .provider
-        .get_block_by_number(
-            BlockNumberOrTag::Number(ctx.log.block_number.unwrap()),
-            false,
-        )
-        .await
-        .unwrap()
-        .unwrap();
-
-    let block_timestamp = block.header.timestamp as i64;
+    let block_timestamp = ctx.block.header.timestamp as i64;
 
     sqlx::query!(
-        r#"insert into "RocketPool" (block_number, block_timestamp, log_index, eth, rpl) values ($1,$2,$3,$4,$5)"#,
+        r#"insert into "RocketPool" (block_number, block_timestamp, eth, rpl) values ($1,$2,$3,$4)"#,
         block_number,
         block_timestamp,
-        log_index,
         total_eth,
         total_rpl,
     )
