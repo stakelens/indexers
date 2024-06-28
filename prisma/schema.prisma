@@ -33,8 +33,7 @@ model StakeWise {
   block_timestamp BigInt
   log_index       BigInt
 
-  vault String
-  eth   String
+  eth String
 
   @@unique([block_number, log_index])
 }
