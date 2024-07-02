@@ -61,3 +61,10 @@ model Renzo {
 
   eth String
 }
+
+model Mantle {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}

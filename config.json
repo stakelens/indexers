@@ -40,6 +40,11 @@
       "startBlock": 20047255,
       "network": "ethereum",
       "step": 720
+    },
+    "Mantle": {
+      "startBlock": 18290587,
+      "network": "ethereum",
+      "step": 720
     }
   },
   "networks": {

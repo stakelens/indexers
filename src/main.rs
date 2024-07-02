@@ -4,6 +4,7 @@ mod handlers;
 use ghost_crab::prelude::*;
 use handlers::etherfi;
 use handlers::lido;
+use handlers::mantle;
 use handlers::renzo;
 use handlers::rocketpool;
 use handlers::stakewise;
@@ -30,6 +31,9 @@ async fn main() {
         .await;
     indexer
         .load_block_handler(renzo::RenzoBlockHandler::new())
+        .await;
+    indexer
+        .load_block_handler(mantle::MantleBlockHandler::new())
         .await;
 
     indexer.start().await;
