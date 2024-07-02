@@ -30,6 +30,11 @@
       "startBlock": 17030767,
       "network": "ethereum",
       "step": 720
+    },
+    "Lido": {
+      "startBlock": 11473216,
+      "network": "ethereum",
+      "step": 720
     }
   },
   "networks": {

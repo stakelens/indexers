@@ -47,3 +47,10 @@ model Swell {
 
   eth String
 }
+
+model Lido {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}
