@@ -54,3 +54,10 @@ model Lido {
 
   eth String
 }
+
+model Renzo {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}

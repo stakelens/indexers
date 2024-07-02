@@ -35,6 +35,11 @@
       "startBlock": 11473216,
       "network": "ethereum",
       "step": 720
+    },
+    "Renzo": {
+      "startBlock": 20047255,
+      "network": "ethereum",
+      "step": 720
     }
   },
   "networks": {
