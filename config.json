@@ -1,34 +1,39 @@
 {
-    "database": "$DATABASE_URL",
-    "dataSources": {
-        "EtherFi": {
-            "startBlock": 105927637,
-            "address": "0x6329004E903B7F420245E7aF3f355186f2432466",
-            "abi": "abis/etherfi/TVLOracle.json",
-            "network": "optimism"
-        },
-        "VaultsRegistry": {
-            "startBlock": 18470079,
-            "address": "0x3a0008a588772446f6e656133C2D5029CC4FC20E",
-            "abi": "abis/stakewise/VaultsRegistry.json",
-            "network": "ethereum"
-        }
+  "database": "$DATABASE_URL",
+  "dataSources": {
+    "EtherFi": {
+      "startBlock": 105927637,
+      "address": "0x6329004E903B7F420245E7aF3f355186f2432466",
+      "abi": "abis/etherfi/TVLOracle.json",
+      "network": "optimism"
     },
-    "templates": {
-        "ETHVault": { 
-            "abi": "abis/stakewise/EthVault.json",
-            "network": "ethereum"
-        }
-    },
-    "blockHandlers": {
-        "RocketPool": {
-            "startBlock": 19796144,
-            "network": "ethereum",
-            "step": 720
-        }
-    },
-    "networks": {
-        "ethereum": "$ETH_RPC_URL",
-        "optimism": "$OPT_RPC_URL"
+    "VaultsRegistry": {
+      "startBlock": 18470079,
+      "address": "0x3a0008a588772446f6e656133C2D5029CC4FC20E",
+      "abi": "abis/stakewise/VaultsRegistry.json",
+      "network": "ethereum"
     }
+  },
+  "templates": {
+    "ETHVault": {
+      "abi": "abis/stakewise/EthVault.json",
+      "network": "ethereum"
+    }
+  },
+  "blockHandlers": {
+    "RocketPool": {
+      "startBlock": 19796144,
+      "network": "ethereum",
+      "step": 720
+    },
+    "Swell": {
+      "startBlock": 17030767,
+      "network": "ethereum",
+      "step": 720
+    }
+  },
+  "networks": {
+    "ethereum": "$ETH_RPC_URL",
+    "optimism": "$OPT_RPC_URL"
+  }
 }

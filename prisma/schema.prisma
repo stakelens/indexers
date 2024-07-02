@@ -10,14 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model RocketPool {
-  block_number    BigInt @unique
-  block_timestamp BigInt
-
-  eth String
-  rpl String
-}
-
+// Event Handlers
 model EtherFi {
   block_number    BigInt
   block_timestamp BigInt
@@ -36,4 +29,21 @@ model StakeWise {
   eth String
 
   @@unique([block_number, log_index])
+}
+
+// Block Handlers
+
+model RocketPool {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+  rpl String
+}
+
+model Swell {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
 }
