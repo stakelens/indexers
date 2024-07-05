@@ -68,3 +68,10 @@ model Mantle {
 
   eth String
 }
+
+model Stader {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}

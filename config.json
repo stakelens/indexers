@@ -45,6 +45,11 @@
       "startBlock": 18290587,
       "network": "ethereum",
       "step": 720
+    },
+    "Stader": {
+      "startBlock": 17416153,
+      "network": "ethereum",
+      "step": 720
     }
   },
   "networks": {

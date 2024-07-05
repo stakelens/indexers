@@ -7,6 +7,7 @@ use handlers::lido;
 use handlers::mantle;
 use handlers::renzo;
 use handlers::rocketpool;
+use handlers::stader;
 use handlers::stakewise;
 use handlers::swell;
 
@@ -34,6 +35,9 @@ async fn main() {
         .await;
     indexer
         .load_block_handler(mantle::MantleBlockHandler::new())
+        .await;
+    indexer
+        .load_block_handler(stader::StaderBlockHandler::new())
         .await;
 
     indexer.start().await;
