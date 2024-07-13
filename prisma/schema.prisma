@@ -78,10 +78,9 @@ model Stader {
 
 // Dashboard Models
 model CurrencyPrice {
-  name String @id
-
+  name  String
   date  String
   price Float
 
-  @@unique([name, date])
+  @@id([name, date])
 }
