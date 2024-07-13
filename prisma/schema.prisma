@@ -75,3 +75,13 @@ model Stader {
 
   eth String
 }
+
+// Dashboard Models
+model CurrencyPrice {
+  name String @id
+
+  date  String
+  price Float
+
+  @@unique([name, date])
+}
