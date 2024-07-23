@@ -1,4 +1,4 @@
-use alloy::{primitives::Uint, rpc::types::eth::BlockNumberOrTag, sol};
+use alloy::{eips::BlockId, primitives::Uint, sol};
 use ghost_crab::prelude::*;
 
 use crate::db;
@@ -21,30 +21,15 @@ sol!(
     "abis/rocketpool/RocketVault.json"
 );
 
+const ROCKET_VAULT: Address = address!("3bdc69c4e5e13e52a65f5583c23efb9636b469d6");
+const ROCKET_MINIPOOL: Address = address!("6d010c43d4e96d74c422f2e27370af48711b49bf");
+const ROCKET_NODE_STAKING: Address = address!("0d8d8f8541b12a0e1194b7cc4b6d954b90ab82ec");
+
 #[block_handler(RocketPool)]
 async fn RocketPoolBlockHandler(ctx: BlockContext) {
-    let block_number = ctx.block.header.number.unwrap();
-
-    let rocket_vault_contract = RocketVault::new(
-        "0x3bdc69c4e5e13e52a65f5583c23efb9636b469d6"
-            .parse()
-            .unwrap(),
-        &ctx.provider,
-    );
-
-    let rocket_minipool_manager_contract = RocketMinipoolManager::new(
-        "0x6d010c43d4e96d74c422f2e27370af48711b49bf"
-            .parse()
-            .unwrap(),
-        &ctx.provider,
-    );
-
-    let rocket_node_staking_contract = RocketNodeStaking::new(
-        "0x0d8d8f8541b12a0e1194b7cc4b6d954b90ab82ec"
-            .parse()
-            .unwrap(),
-        &ctx.provider,
-    );
+    let rocket_vault_contract = RocketVault::new(ROCKET_VAULT, &ctx.provider);
+    let rocket_minipool_contract = RocketMinipoolManager::new(ROCKET_MINIPOOL, &ctx.provider);
+    let rocket_node_staking_contract = RocketNodeStaking::new(ROCKET_NODE_STAKING, &ctx.provider);
 
     let mut total_eth: Uint<256, 4> = Uint::from(0);
     let mut total_rpl: Uint<256, 4> = Uint::from(0);
@@ -58,11 +43,9 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
     let mut withdrawable_minipools: Uint<256, 4> = Uint::from(0);
 
     loop {
-        let active_minipools = rocket_minipool_manager_contract
+        let active_minipools = rocket_minipool_contract
             .getMinipoolCountPerStatus(Uint::from(offset), Uint::from(limit))
-            .block(alloy::rpc::types::eth::BlockId::Number(
-                BlockNumberOrTag::Number(block_number),
-            ))
+            .block(BlockId::from(ctx.block_number))
             .call()
             .await
             .unwrap();
@@ -99,9 +82,7 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
 
     let rocket_deposit_pool_eth = rocket_vault_contract
         .balanceOf(String::from("rocketDepositPool"))
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
@@ -110,9 +91,7 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
 
     let total_rpl_stacked = rocket_node_staking_contract
         .getTotalRPLStake()
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
@@ -121,9 +100,7 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
 
     let rocket_dao_node_trusted_actions_rpl_balance = rocket_vault_contract
         .balanceOf(String::from("rocketDAONodeTrustedActions"))
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
@@ -132,9 +109,7 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
 
     let rocket_auction_manager_rpl_balance = rocket_vault_contract
         .balanceOf(String::from("rocketAuctionManager"))
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
@@ -143,10 +118,11 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
 
     let db = db::get().await;
 
-    let block_number = block_number as i64;
+    let block_number = ctx.block_number as i64;
     let total_eth = total_eth.to_string();
     let total_rpl = total_rpl.to_string();
-    let block_timestamp = ctx.block.header.timestamp as i64;
+    let block = ctx.block().await.unwrap().unwrap();
+    let block_timestamp = block.header.timestamp as i64;
 
     sqlx::query!(
         r#"insert into "RocketPool" (block_number, block_timestamp, eth, rpl) values ($1,$2,$3,$4)"#,

@@ -1,4 +1,4 @@
-use alloy::{rpc::types::eth::BlockNumberOrTag, sol};
+use alloy::{eips::BlockId, sol};
 use ghost_crab::prelude::*;
 
 use crate::db;
@@ -9,31 +9,26 @@ sol!(
     "abis/lido/Lido.json"
 );
 
+const LIDO: Address = address!("ae7ab96520DE3A18E5e111B5EaAb095312D7fE84");
+
 #[block_handler(Lido)]
 async fn LidoBlockHandler(ctx: BlockContext) {
-    let block_number = ctx.block.header.number.unwrap();
-
-    let lido_contract = Lido::new(
-        "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84"
-            .parse()
-            .unwrap(),
-        &ctx.provider,
-    );
+    let lido_contract = Lido::new(LIDO, &ctx.provider);
 
     let pooled_eth = lido_contract
         .getTotalPooledEther()
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
 
     let db = db::get().await;
 
-    let block_number = block_number as i64;
+    let block_number = ctx.block_number as i64;
     let eth_supply = pooled_eth._0.to_string();
-    let block_timestamp = ctx.block.header.timestamp as i64;
+
+    let block = ctx.block().await.unwrap().unwrap();
+    let block_timestamp = block.header.timestamp as i64;
 
     sqlx::query!(
         r#"insert into "Lido" (block_number, block_timestamp, eth) values ($1,$2,$3)"#,

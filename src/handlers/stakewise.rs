@@ -3,8 +3,8 @@ use ghost_crab::prelude::*;
 
 use crate::db;
 
-#[handler(ETHVault.Deposited)]
-async fn ETHVaultDeposited(ctx: Context) {
+#[template(ETHVault.Deposited)]
+async fn ETHVaultDeposited(ctx: EventContext) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = event.assets.to_string();
@@ -34,8 +34,8 @@ async fn ETHVaultDeposited(ctx: Context) {
     .await.unwrap();
 }
 
-#[handler(ETHVault.Redeemed)]
-async fn ETHVaultRedeemed(ctx: Context) {
+#[template(ETHVault.Redeemed)]
+async fn ETHVaultRedeemed(ctx: EventContext) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = format!("-{}", event.assets.to_string());
@@ -65,8 +65,8 @@ async fn ETHVaultRedeemed(ctx: Context) {
     .await.unwrap();
 }
 
-#[handler(ETHVault.Migrated)]
-async fn ETHVaultMigrated(ctx: Context) {
+#[template(ETHVault.Migrated)]
+async fn ETHVaultMigrated(ctx: EventContext) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = event.assets.to_string();
@@ -96,31 +96,32 @@ async fn ETHVaultMigrated(ctx: Context) {
     .await.unwrap();
 }
 
-#[handler(VaultsRegistry.VaultAdded)]
-async fn VaultsRegistry(ctx: Context) {
-    let vault = event.vault.to_string();
-
+#[event_handler(VaultsRegistry.VaultAdded)]
+async fn VaultsRegistry(ctx: EventContext) {
     ctx.templates
         .start(Template {
-            address: vault.clone(),
+            address: event.vault.clone(),
             start_block: ctx.log.block_number.unwrap(),
             handler: ETHVaultDeposited::new(),
         })
-        .await;
+        .await
+        .unwrap();
 
     ctx.templates
         .start(Template {
-            address: vault.clone(),
+            address: event.vault.clone(),
             start_block: ctx.log.block_number.unwrap(),
             handler: ETHVaultRedeemed::new(),
         })
-        .await;
+        .await
+        .unwrap();
 
     ctx.templates
         .start(Template {
-            address: vault,
+            address: event.vault,
             start_block: ctx.log.block_number.unwrap(),
             handler: ETHVaultMigrated::new(),
         })
-        .await;
+        .await
+        .unwrap();
 }

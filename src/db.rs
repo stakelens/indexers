@@ -1,7 +1,7 @@
 use std::env;
 
-use tokio::sync::OnceCell;
 use dotenvy::dotenv;
+use tokio::sync::OnceCell;
 
 static DB: OnceCell<sqlx::Pool<sqlx::Postgres>> = OnceCell::const_new();
 
