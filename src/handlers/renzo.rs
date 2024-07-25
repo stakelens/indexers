@@ -1,4 +1,4 @@
-use alloy::{primitives::address, rpc::types::eth::BlockNumberOrTag, sol};
+use alloy::{eips::BlockId, primitives::address, sol};
 use ghost_crab::prelude::*;
 
 use crate::db;
@@ -9,31 +9,25 @@ sol!(
     "abis/renzo/EzEthToken.json"
 );
 
+const EZETH: Address = address!("f951E335afb289353dc249e82926178EaC7DEd78");
+const LOCK_BOX: Address = address!("C8140dA31E6bCa19b287cC35531c2212763C2059");
+
 #[block_handler(Renzo)]
 async fn RenzoBlockHandler(ctx: BlockContext) {
-    let block_number = ctx.block.header.number.unwrap();
+    let ezeth_contract = ezETHToken::new(EZETH, &ctx.provider);
 
-    let ezeth_contract = ezETHToken::new(
-        "0xf951E335afb289353dc249e82926178EaC7DEd78"
-            .parse()
-            .unwrap(),
-        &ctx.provider,
-    );
+    let block_id = BlockId::from(ctx.block_number);
 
     let total_supply = ezeth_contract
         .totalSupply()
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .block(block_id.clone())
         .call()
         .await
         .unwrap();
 
     let lock_box_balance = ezeth_contract
-        .balanceOf(address!("C8140dA31E6bCa19b287cC35531c2212763C2059"))
-        .block(alloy::rpc::types::eth::BlockId::Number(
-            BlockNumberOrTag::Number(block_number),
-        ))
+        .balanceOf(LOCK_BOX)
+        .block(block_id)
         .call()
         .await
         .unwrap();
@@ -42,9 +36,10 @@ async fn RenzoBlockHandler(ctx: BlockContext) {
 
     let db = db::get().await;
 
-    let block_number = block_number as i64;
+    let block_number = ctx.block_number as i64;
     let eth = eth.to_string();
-    let block_timestamp = ctx.block.header.timestamp as i64;
+    let block = ctx.block().await.unwrap().unwrap();
+    let block_timestamp = block.header.timestamp as i64;
 
     sqlx::query!(
         r#"insert into "Renzo" (block_number, block_timestamp, eth) values ($1,$2,$3)"#,

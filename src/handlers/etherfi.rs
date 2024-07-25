@@ -2,8 +2,8 @@ use crate::db;
 use alloy::eips::BlockNumberOrTag;
 use ghost_crab::prelude::*;
 
-#[handler(EtherFi.TVLUpdated)]
-async fn EtherFiTVLUpdated(ctx: Context) {
+#[event_handler(EtherFi.TVLUpdated)]
+async fn EtherFiTVLUpdated(ctx: EventContext) {
     let block_number = ctx.log.block_number.unwrap() as i64;
     let current_tvl = event._currentTvl.to_string();
     let log_index = ctx.log.log_index.unwrap() as i64;
