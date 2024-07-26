@@ -53,7 +53,13 @@
     }
   },
   "networks": {
-    "ethereum": "$ETH_RPC_URL",
-    "optimism": "$OPT_RPC_URL"
+    "ethereum": {
+      "rpcUrl": "$ETH_RPC_URL",
+      "requestsPerSecond": 10000
+    },
+    "optimism": {
+      "rpcUrl": "$OPT_RPC_URL",
+      "requestsPerSecond": 10000
+    }
   }
 }
