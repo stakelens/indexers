@@ -56,7 +56,7 @@
       "network": "ethereum",
       "step": 720
     },
-    "RPLUSDC":{
+    "RPLUSDC": {
       "startBlock": 13598687,
       "network": "ethereum",
       "step": 720
@@ -65,11 +65,11 @@
   "networks": {
     "ethereum": {
       "rpcUrl": "$ETH_RPC_URL",
-      "requestsPerSecond": 30
+      "requestsPerSecond": 100
     },
     "optimism": {
       "rpcUrl": "$OPT_RPC_URL",
-      "requestsPerSecond": 30
+      "requestsPerSecond": 100
     }
   }
 }
