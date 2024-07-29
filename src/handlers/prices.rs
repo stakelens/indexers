@@ -20,8 +20,8 @@ struct Observation {
 async fn handle_uniswap_twap(
     ctx: BlockContext,
     pool_address: Address,
-    token0: Token,
-    token1: Token,
+    base_token: Token,
+    quote_token: Token,
 ) {
     let uniswap_v3_pool_contract = UniswapV3Pool::new(pool_address, &ctx.provider);
 
@@ -60,7 +60,10 @@ async fn handle_uniswap_twap(
         (observations[0].seconds_ago as i128 - observations[1].seconds_ago as i128).abs();
     let average_tick = (diff_tick_cumulative as f64 / seconds_between as f64).round() as i32;
 
-    let price = tick_to_price(token0.clone(), token1.clone(), average_tick).unwrap().to_significant(18, Rounding::RoundHalfUp).unwrap();
+    let price = tick_to_price(base_token.clone(), quote_token.clone(), average_tick)
+        .unwrap()
+        .to_significant(18, Rounding::RoundHalfUp)
+        .unwrap();
     let price_float = price.parse::<f64>().unwrap();
 
     let db = db::get().await;
@@ -68,13 +71,13 @@ async fn handle_uniswap_twap(
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
-    let token0_symbol = token0.symbol().unwrap().to_string();
-    let token1_symbol = token1.symbol().unwrap().to_string();
+    let base_token_symbol = base_token.symbol().unwrap().to_string();
+    let quote_token_symbol = quote_token.symbol().unwrap().to_string();
 
     sqlx::query!(
         r#"insert into "UniswapTWAP" (base_token, quote_token, price, block_timestamp) values ($1,$2,$3,$4)"#,
-        token0_symbol,
-        token1_symbol,
+        base_token_symbol,
+        quote_token_symbol,
         price_float,
         block_timestamp,
     )
@@ -87,7 +90,7 @@ async fn handle_uniswap_twap(
 async fn ETHUSDCUniswapTWAP(ctx: BlockContext) {
     const CHAIN_ID: u64 = 1; // Ethereum Mainnet
     const USDC_ETH_V3: Address = address!("88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640");
-    
+
     let usdc: Token = token!(
         CHAIN_ID,
         "A0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -95,6 +98,7 @@ async fn ETHUSDCUniswapTWAP(ctx: BlockContext) {
         "USDC",
         "USD Coin"
     );
+
     let weth: Token = token!(
         CHAIN_ID,
         "C02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -102,6 +106,7 @@ async fn ETHUSDCUniswapTWAP(ctx: BlockContext) {
         "WETH",
         "Wrapped Ether"
     );
+
     handle_uniswap_twap(ctx, USDC_ETH_V3, weth, usdc).await;
 }
 
@@ -117,6 +122,7 @@ async fn RPLUSDCUniswapTWAP(ctx: BlockContext) {
         "WETH",
         "Wrapped Ether"
     );
+
     let rpl: Token = token!(
         CHAIN_ID,
         "D33526068D116cE69F19A9ee46F0bd304F21A51f",
@@ -124,5 +130,6 @@ async fn RPLUSDCUniswapTWAP(ctx: BlockContext) {
         "RPL",
         "Rocket Pool"
     );
+
     handle_uniswap_twap(ctx, ETH_RPL_V3, rpl, weth).await;
 }
