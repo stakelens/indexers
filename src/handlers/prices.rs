@@ -25,7 +25,7 @@ async fn handle_uniswap_twap(
 ) {
     let uniswap_v3_pool_contract = UniswapV3Pool::new(pool_address, &ctx.provider);
 
-    let timestamps = Vec::from([0, 360]);
+    let timestamps = vec![0, 360];
 
     let observe_result = uniswap_v3_pool_contract
         .observe(timestamps.clone())
