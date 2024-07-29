@@ -12,7 +12,6 @@ sol!(
     "abis/prices/UniswapV3Pool.json"
 );
 
-
 struct Observation {
     seconds_ago: u32,
     tick_cumulative: i128,
@@ -21,7 +20,6 @@ struct Observation {
 async fn handle_uniswap_twap(
     ctx: BlockContext,
     pool_address: Address,
-    currency_pair: &str,
     token0: Token,
     token1: Token,
 ) {
@@ -62,7 +60,7 @@ async fn handle_uniswap_twap(
         (observations[0].seconds_ago as i128 - observations[1].seconds_ago as i128).abs();
     let average_tick = (diff_tick_cumulative as f64 / seconds_between as f64).round() as i32;
 
-    let price = tick_to_price(token0, token1, average_tick).unwrap().to_significant(18, Rounding::RoundHalfUp).unwrap();
+    let price = tick_to_price(token0.clone(), token1.clone(), average_tick).unwrap().to_significant(18, Rounding::RoundHalfUp).unwrap();
     let price_float = price.parse::<f64>().unwrap();
 
     let db = db::get().await;
@@ -70,11 +68,15 @@ async fn handle_uniswap_twap(
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
+    let token0_symbol = token0.symbol().unwrap().to_string();
+    let token1_symbol = token1.symbol().unwrap().to_string();
+
     sqlx::query!(
-        r#"insert into "CurrencyPrice" (name, block_timestamp, price) values ($1,$2,$3)"#,
-        currency_pair,
+        r#"insert into "UniswapTWAP" (base_token, quote_token, price, block_timestamp) values ($1,$2,$3,$4)"#,
+        token0_symbol,
+        token1_symbol,
+        price_float,
         block_timestamp,
-        price_float
     )
     .execute(db)
     .await
@@ -100,7 +102,7 @@ async fn ETHUSDCUniswapTWAP(ctx: BlockContext) {
         "WETH",
         "Wrapped Ether"
     );
-    handle_uniswap_twap(ctx, USDC_ETH_V3, "ETH/USDC", weth, usdc).await;
+    handle_uniswap_twap(ctx, USDC_ETH_V3, weth, usdc).await;
 }
 
 #[block_handler(RPLUSDC)]
@@ -120,7 +122,7 @@ async fn RPLUSDCUniswapTWAP(ctx: BlockContext) {
         "D33526068D116cE69F19A9ee46F0bd304F21A51f",
         18,
         "RPL",
-        "Rocket Pool Protocol"
+        "Rocket Pool"
     );
-    handle_uniswap_twap(ctx, ETH_RPL_V3, "RPL/ETH", rpl, weth).await;
+    handle_uniswap_twap(ctx, ETH_RPL_V3, rpl, weth).await;
 }

@@ -77,11 +77,12 @@ model Stader {
 }
 
 // Dashboard Models
-model CurrencyPrice {
-  name  String
-  block_timestamp BigInt
+model UniswapTWAP {
+  base_token String
+  quote_token String
   
   price Float
+  block_timestamp BigInt
 
-  @@id([name, block_timestamp])
+  @@id([base_token, quote_token, block_timestamp])
 }
