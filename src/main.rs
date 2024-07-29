@@ -10,6 +10,7 @@ use handlers::rocketpool;
 use handlers::stader;
 use handlers::stakewise;
 use handlers::swell;
+use handlers::prices;
 
 #[tokio::main]
 async fn main() {
@@ -52,6 +53,11 @@ async fn main() {
 
     indexer
         .load_block_handler(stader::StaderBlockHandler::new())
+        .await
+        .unwrap();
+
+    indexer.
+        load_block_handler(prices::PricesBlockHandler::new())
         .await
         .unwrap();
 

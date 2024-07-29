@@ -79,8 +79,9 @@ model Stader {
 // Dashboard Models
 model CurrencyPrice {
   name  String
-  date  String
+  block_timestamp BigInt
+  
   price Float
 
-  @@id([name, date])
+  @@id([name, block_timestamp])
 }
