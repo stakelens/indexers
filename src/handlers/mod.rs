@@ -1,6 +1,7 @@
 pub mod etherfi;
 pub mod lido;
 pub mod mantle;
+pub mod prices;
 pub mod renzo;
 pub mod rocketpool;
 pub mod stader;
