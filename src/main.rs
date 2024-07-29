@@ -57,7 +57,12 @@ async fn main() {
         .unwrap();
 
     indexer.
-        load_block_handler(prices::PricesBlockHandler::new())
+        load_block_handler(prices::ETHUSDCUniswapTWAP::new())
+        .await
+        .unwrap();
+
+    indexer.
+        load_block_handler(prices::RPLUSDCUniswapTWAP::new())
         .await
         .unwrap();
 

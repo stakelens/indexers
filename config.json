@@ -55,6 +55,11 @@
       "startBlock": 12376729,
       "network": "ethereum",
       "step": 720
+    },
+    "RPLUSDC":{
+      "startBlock": 13598687,
+      "network": "ethereum",
+      "step": 720
     }
   },
   "networks": {
