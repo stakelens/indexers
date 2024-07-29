@@ -18,7 +18,7 @@ struct Observation {
     tick_cumulative: i128,
 }
 
-async fn handle_uniswap_price(
+async fn handle_uniswap_twap(
     ctx: BlockContext,
     pool_address: Address,
     currency_pair: &str,
@@ -100,7 +100,7 @@ async fn ETHUSDCUniswapTWAP(ctx: BlockContext) {
         "WETH",
         "Wrapped Ether"
     );
-    handle_uniswap_price(ctx, USDC_ETH_V3, "ETH/USDC", weth, usdc).await;
+    handle_uniswap_twap(ctx, USDC_ETH_V3, "ETH/USDC", weth, usdc).await;
 }
 
 #[block_handler(RPLUSDC)]
@@ -122,5 +122,5 @@ async fn RPLUSDCUniswapTWAP(ctx: BlockContext) {
         "RPL",
         "Rocket Pool Protocol"
     );
-    handle_uniswap_price(ctx, ETH_RPL_V3, "RPL/ETH", rpl, weth).await;
+    handle_uniswap_twap(ctx, ETH_RPL_V3, "RPL/ETH", rpl, weth).await;
 }
