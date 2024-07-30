@@ -27,12 +27,25 @@ async fn handle_uniswap_twap(
 
     let timestamps = vec![0, 360];
 
-    let observe_result = uniswap_v3_pool_contract
+    let observe_result = match uniswap_v3_pool_contract
         .observe(timestamps.clone())
         .block(BlockId::from(ctx.block_number))
         .call()
         .await
-        .unwrap();
+    {
+        Ok(result) => result,
+        Err(e) => {
+            let base_token_string = base_token.symbol().unwrap();
+            let quote_token_string = quote_token.symbol().unwrap();
+
+            println!(
+                "[Block {}] Error observing Uniswap TWAP [{}-{}]: {:?}",
+                ctx.block_number, base_token_string, quote_token_string, e
+            );
+
+            return;
+        }
+    };
 
     let tick_cumulatives: Vec<i128> = observe_result
         .tickCumulatives
