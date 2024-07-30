@@ -1,4 +1,4 @@
-use alloy::sol;
+use alloy::{eips::BlockId, sol};
 use ghost_crab::prelude::*;
 use std::cmp::Ordering;
 use uniswap_sdk_core::{prelude::*, token};
@@ -29,6 +29,7 @@ async fn handle_uniswap_twap(
 
     let observe_result = uniswap_v3_pool_contract
         .observe(timestamps.clone())
+        .block(BlockId::from(ctx.block_number))
         .call()
         .await
         .unwrap();
