@@ -1,4 +1,4 @@
-use alloy::{eips::BlockId, sol};
+use alloy::{eips::BlockId, primitives::Uint, sol};
 use ghost_crab::prelude::*;
 
 use crate::db;
@@ -32,7 +32,7 @@ async fn SwellBlockHandler(ctx: BlockContext) {
     let db = db::get().await;
 
     let block_number = ctx.block_number as i64;
-    let eth_supply = (total_supply._0 * rate._0).to_string();
+    let eth_supply = ((total_supply._0 * rate._0) / Uint::from(1e18)).to_string();
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
