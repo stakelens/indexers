@@ -1,4 +1,5 @@
 use ghost_crab::prelude::*;
+use log::{error, info};
 
 use crate::db;
 
@@ -14,15 +15,32 @@ async fn ETHVaultDeposited(ctx: EventContext) {
 
     let db = db::get().await;
 
-    sqlx::query!(
-        r#"insert into "StakeWise" (block_number, block_timestamp, log_index, eth) values ($1,$2,$3,$4)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "StakeWise" (block_number, block_timestamp, log_index, eth)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (block_number, log_index) DO NOTHING"#,
         block_number,
         block_timestamp,
         log_index,
         eth
     )
     .execute(db)
-    .await.unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully saved Deposited event data for block {}, log index {}",
+                block_number, log_index
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error saving Deposited event data for block {}, log index {}: {:?}",
+                block_number, log_index, e
+            );
+        }
+    }
 }
 
 #[template(ETHVault.Redeemed)]
@@ -37,15 +55,32 @@ async fn ETHVaultRedeemed(ctx: EventContext) {
 
     let db = db::get().await;
 
-    sqlx::query!(
-        r#"insert into "StakeWise" (block_number, block_timestamp, log_index, eth) values ($1,$2,$3,$4)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "StakeWise" (block_number, block_timestamp, log_index, eth)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (block_number, log_index) DO NOTHING"#,
         block_number,
         block_timestamp,
         log_index,
         eth
     )
     .execute(db)
-    .await.unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully saved Redeemed event data for block {}, log index {}",
+                block_number, log_index
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error saving Redeemed event data for block {}, log index {}: {:?}",
+                block_number, log_index, e
+            );
+        }
+    }
 }
 
 #[template(ETHVault.Migrated)]
@@ -60,15 +95,32 @@ async fn ETHVaultMigrated(ctx: EventContext) {
 
     let db = db::get().await;
 
-    sqlx::query!(
-        r#"insert into "StakeWise" (block_number, block_timestamp, log_index, eth) values ($1,$2,$3,$4)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "StakeWise" (block_number, block_timestamp, log_index, eth)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (block_number, log_index) DO NOTHING"#,
         block_number,
         block_timestamp,
         log_index,
         eth
     )
     .execute(db)
-    .await.unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully saved Migrated event data for block {}, log index {}",
+                block_number, log_index
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error saving Migrated event data for block {}, log index {}: {:?}",
+                block_number, log_index, e
+            );
+        }
+    }
 }
 
 #[event_handler(VaultsRegistry.VaultAdded)]

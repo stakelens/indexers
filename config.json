@@ -65,11 +65,11 @@
   "networks": {
     "ethereum": {
       "rpcUrl": "$ETH_RPC_URL",
-      "requestsPerSecond": 100
+      "requestsPerSecond": 1000
     },
     "optimism": {
       "rpcUrl": "$OPT_RPC_URL",
-      "requestsPerSecond": 100
+      "requestsPerSecond": 1000
     }
   }
 }

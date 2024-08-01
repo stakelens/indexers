@@ -5,15 +5,16 @@ use ghost_crab::prelude::*;
 use handlers::etherfi;
 use handlers::lido;
 use handlers::mantle;
+use handlers::prices;
 use handlers::renzo;
 use handlers::rocketpool;
 use handlers::stader;
 use handlers::stakewise;
 use handlers::swell;
-use handlers::prices;
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
     let mut indexer = ghost_crab::Indexer::new().unwrap();
 
     indexer
@@ -56,13 +57,13 @@ async fn main() {
         .await
         .unwrap();
 
-    indexer.
-        load_block_handler(prices::ETHUSDCUniswapTWAP::new())
+    indexer
+        .load_block_handler(prices::ETHUSDCUniswapTWAP::new())
         .await
         .unwrap();
 
-    indexer.
-        load_block_handler(prices::RPLUSDCUniswapTWAP::new())
+    indexer
+        .load_block_handler(prices::RPLUSDCUniswapTWAP::new())
         .await
         .unwrap();
 

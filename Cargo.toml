@@ -11,3 +11,5 @@ sqlx = { version = "0.7.4", features = ["runtime-tokio", "postgres"] }
 dotenvy = "0.15.7"
 uniswap-v3-sdk = { version = "0.32.0", features = ["extensions", "std"] }
 uniswap-sdk-core = "1.0.0-rc"
+log = "0.4"
+env_logger = "0.11.5"

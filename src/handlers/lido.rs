@@ -1,5 +1,6 @@
 use alloy::{eips::BlockId, sol};
 use ghost_crab::prelude::*;
+use log::{error, info};
 
 use crate::db;
 
@@ -30,13 +31,26 @@ async fn LidoBlockHandler(ctx: BlockContext) {
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
-    sqlx::query!(
-        r#"insert into "Lido" (block_number, block_timestamp, eth) values ($1,$2,$3)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "Lido" (block_number, block_timestamp, eth)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (block_number) DO NOTHING"#,
         block_number,
         block_timestamp,
         eth_supply,
     )
     .execute(db)
-    .await
-    .unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!("Successfully indexed Lido data for block {}", block_number);
+        }
+        Err(e) => {
+            error!(
+                "Error indexing Lido data for block {}: {:?}",
+                block_number, e
+            );
+        }
+    }
 }

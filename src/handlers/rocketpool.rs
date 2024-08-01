@@ -1,5 +1,6 @@
 use alloy::{eips::BlockId, primitives::Uint, sol};
 use ghost_crab::prelude::*;
+use log::{error, info};
 
 use crate::db;
 
@@ -124,14 +125,30 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
-    sqlx::query!(
-        r#"insert into "RocketPool" (block_number, block_timestamp, eth, rpl) values ($1,$2,$3,$4)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "RocketPool" (block_number, block_timestamp, eth, rpl)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (block_number) DO NOTHING"#,
         block_number,
         block_timestamp,
         total_eth,
         total_rpl,
     )
     .execute(db)
-    .await
-    .unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully indexed RocketPool data for block {}",
+                block_number
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error indexing RocketPool data for block {}: {:?}",
+                block_number, e
+            );
+        }
+    }
 }

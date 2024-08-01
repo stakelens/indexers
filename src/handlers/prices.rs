@@ -1,5 +1,6 @@
 use alloy::{eips::BlockId, sol};
 use ghost_crab::prelude::*;
+use log::{error, info};
 use std::cmp::Ordering;
 use uniswap_sdk_core::{prelude::*, token};
 use uniswap_v3_sdk::prelude::*;
@@ -88,16 +89,32 @@ async fn handle_uniswap_twap(
     let base_token_symbol = base_token.symbol().unwrap().to_string();
     let quote_token_symbol = quote_token.symbol().unwrap().to_string();
 
-    sqlx::query!(
-        r#"insert into "UniswapTWAP" (base_token, quote_token, price, block_timestamp) values ($1,$2,$3,$4)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "UniswapTWAP" (base_token, quote_token, price, block_timestamp)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (base_token, quote_token, block_timestamp) DO NOTHING"#,
         base_token_symbol,
         quote_token_symbol,
         price_float,
         block_timestamp,
     )
     .execute(db)
-    .await
-    .unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully indexed Uniswap TWAP data for {}-{} at block timestamp {}",
+                base_token_symbol, quote_token_symbol, block_timestamp
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error indexing Uniswap TWAP data for {}-{} at block timestamp {}: {:?}",
+                base_token_symbol, quote_token_symbol, block_timestamp, e
+            );
+        }
+    }
 }
 
 #[block_handler(ETHUSDC)]

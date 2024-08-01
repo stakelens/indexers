@@ -1,5 +1,6 @@
 use alloy::{eips::BlockId, sol};
 use ghost_crab::prelude::*;
+use log::{error, info};
 
 use crate::db;
 
@@ -44,13 +45,29 @@ async fn MantleBlockHandler(ctx: BlockContext) {
     let block = ctx.block().await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
-    sqlx::query!(
-        r#"insert into "Mantle" (block_number, block_timestamp, eth) values ($1,$2,$3)"#,
+    let result = sqlx::query!(
+        r#"INSERT INTO "Mantle" (block_number, block_timestamp, eth)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (block_number) DO NOTHING"#,
         block_number,
         block_timestamp,
         eth
     )
     .execute(db)
-    .await
-    .unwrap();
+    .await;
+
+    match result {
+        Ok(_) => {
+            info!(
+                "Successfully indexed Mantle data for block {}",
+                block_number
+            );
+        }
+        Err(e) => {
+            error!(
+                "Error indexing Mantle data for block {}: {:?}",
+                block_number, e
+            );
+        }
+    }
 }
