@@ -2178,9 +2178,9 @@ dependencies = [
 
 [[package]]
 name = "ghost-crab"
-version = "0.8.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62cac201b33f172457cddee2222a738bb0710ee42d7ff81a2b6ff4c72a3f7793"
+checksum = "bf8bf0dbc111f480b0d89efd3a9b0d38c09cc38af6830993d1407aa33a64e1d7"
 dependencies = [
  "alloy",
  "async-trait",
@@ -2213,9 +2213,9 @@ dependencies = [
 
 [[package]]
 name = "ghost-crab-macros"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18824c462de9d88e35b3999ef1308a17fd886bbc05880a6aadb85a83b5bbd56a"
+checksum = "e146f12d764b390e40dbdfc0ae9af3a40509d49b39e75c9387028826c8661f42"
 dependencies = [
  "ghost-crab-common",
  "proc-macro2",

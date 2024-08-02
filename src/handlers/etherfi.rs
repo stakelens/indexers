@@ -8,7 +8,7 @@ async fn EtherFiTVLUpdated(ctx: EventContext) {
     let current_tvl = event._currentTvl.to_string();
     let log_index = ctx.log.log_index.unwrap() as i64;
 
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
 
     let block_timestamp = block.header.timestamp as i64;
     let db = db::get().await;

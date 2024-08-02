@@ -83,7 +83,7 @@ async fn handle_uniswap_twap(
 
     let db = db::get().await;
 
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
     let base_token_symbol = base_token.symbol().unwrap().to_string();

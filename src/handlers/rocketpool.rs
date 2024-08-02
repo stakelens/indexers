@@ -122,7 +122,7 @@ async fn RocketPoolBlockHandler(ctx: BlockContext) {
     let block_number = ctx.block_number as i64;
     let total_eth = total_eth.to_string();
     let total_rpl = total_rpl.to_string();
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
     let result = sqlx::query!(

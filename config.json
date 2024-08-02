@@ -60,6 +60,11 @@
       "startBlock": 13598687,
       "network": "ethereum",
       "step": 720
+    },
+    "Blobs": {
+      "startBlock": 20435996,
+      "network": "ethereum",
+      "step": 1
     }
   },
   "networks": {

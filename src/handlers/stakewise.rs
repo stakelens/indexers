@@ -9,7 +9,7 @@ async fn ETHVaultDeposited(ctx: EventContext) {
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = event.assets.to_string();
 
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
 
     let block_timestamp = block.header.timestamp as i64;
 
@@ -49,7 +49,7 @@ async fn ETHVaultRedeemed(ctx: EventContext) {
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = format!("-{}", event.assets.to_string());
 
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
 
     let block_timestamp = block.header.timestamp as i64;
 
@@ -89,7 +89,7 @@ async fn ETHVaultMigrated(ctx: EventContext) {
     let log_index = ctx.log.log_index.unwrap() as i64;
     let eth = event.assets.to_string();
 
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
 
     let block_timestamp = block.header.timestamp as i64;
 

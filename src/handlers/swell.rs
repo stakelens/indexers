@@ -34,7 +34,7 @@ async fn SwellBlockHandler(ctx: BlockContext) {
 
     let block_number = ctx.block_number as i64;
     let eth_supply = ((total_supply._0 * rate._0) / Uint::from(1e18)).to_string();
-    let block = ctx.block().await.unwrap().unwrap();
+    let block = ctx.block(false).await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
     let result = sqlx::query!(
