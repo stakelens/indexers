@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"Lido\" (block_number, block_timestamp, eth)\n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a312b2a4ea2b4774820bea0f5ac5ec2f7365e3d830b01312f91dd3f98ebd899c"
+}

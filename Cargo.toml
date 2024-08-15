@@ -5,9 +5,9 @@ edition = "2021"
 rust-version = "1.78"
 
 [dependencies]
-ghost-crab = { version = "0.10.0" }
+ghost-crab = { git = "https://github.com/stakelens/ghost-crab.git", rev = "c76927b15cb4bbe188219ae601ea2538b9bd94ae" }
 tokio = { version = "1.37.0", features = ["full"] }
-sqlx = { version = "0.7.4", features = ["runtime-tokio", "postgres"] }
+sqlx = { version = "0.8.0", features = ["runtime-tokio", "postgres"] }
 dotenvy = "0.15.7"
 uniswap-v3-sdk = { version = "0.32.0", features = ["extensions", "std"] }
 uniswap-sdk-core = "1.0.0-rc"

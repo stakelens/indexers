@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"Stader\" (block_number, block_timestamp, eth)\n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "273ed6015ea062ef8885b70d84a24a485851768b7e7bdcd6f7a03b3f410f5322"
+}

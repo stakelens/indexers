@@ -1,0 +1,70 @@
+# Builder stage
+FROM rust:1.78.0-slim-bullseye AS builder
+
+ARG APP_NAME=indexers
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    ca-certificates \
+    pkg-config \
+    libssl-dev \
+    libclang-dev \
+    clang \
+    cmake \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for libclang
+ENV LIBCLANG_PATH=/usr/lib/llvm-11/lib
+ENV LLVM_CONFIG_PATH=/usr/bin/llvm-config-11
+
+# Copy only the Cargo.toml and Cargo.lock files
+COPY Cargo.toml Cargo.lock ./
+
+# Create a dummy main.rs to build dependencies
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+
+# Build dependencies
+RUN cargo build --release
+
+# Remove the dummy main.rs
+RUN rm src/main.rs
+
+# Copy the actual source code
+COPY . .
+
+ENV SQLX_OFFLINE=true
+
+# Build the application
+RUN touch src/main.rs && cargo build --release
+
+# Strip the binary to reduce size
+RUN strip target/release/$APP_NAME
+
+# Final stage
+FROM debian:bullseye-slim AS release
+
+ARG APP_NAME=indexers
+ENV APP_NAME=$APP_NAME
+
+WORKDIR /app
+
+# Copy the binary from the builder stage
+COPY --from=builder /app/target/release/$APP_NAME ./$APP_NAME
+
+# Copy the config file
+COPY --from=builder /app/config.json ./config.json
+
+# Install only the necessary runtime dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    ca-certificates \
+    libssl1.1 && \
+    rm -rf /var/lib/apt/lists/*
+
+EXPOSE 3000
+
+CMD /app/$APP_NAME

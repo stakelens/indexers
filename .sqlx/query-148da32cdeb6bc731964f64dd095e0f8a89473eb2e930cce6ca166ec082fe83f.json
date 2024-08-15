@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"Renzo\" (block_number, block_timestamp, eth)\n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "148da32cdeb6bc731964f64dd095e0f8a89473eb2e930cce6ca166ec082fe83f"
+}

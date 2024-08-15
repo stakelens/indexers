@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"RocketPool\" (block_number, block_timestamp, eth, rpl)\n           VALUES ($1, $2, $3, $4)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d5ab1ca11580c3c8cc8956002184e9334a49a84aa0b5d936f77426fd1cd9337d"
+}

@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"EtherFi\" (block_number, block_timestamp, log_index, eth)\n           VALUES ($1, $2, $3, $4)\n           ON CONFLICT (block_number, log_index) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f64d492c6bb4244ec866e344ead37426933a2cc806e0129a59ad8356e695feef"
+}
