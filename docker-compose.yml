@@ -103,6 +103,8 @@ services:
 
   prisma-studio:
     image: node:22-alpine
+    depends_on:
+      - db
     working_dir: /app
     volumes:
       - prisma-studio:/app
