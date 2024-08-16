@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"UniswapTWAP\" (base_token, quote_token, price, block_timestamp)\n           VALUES ($1, $2, $3, $4)\n           ON CONFLICT (base_token, quote_token, block_timestamp) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Float8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "18eb6bbff6945255158d48055adcaa948dcfeb0a8bcd6835bb7939ad10e1f03c"
+}

@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"Swell\" (block_number, block_timestamp, eth) \n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) \n           DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bb46581dd11a4e73af0c76c529e9282a9c4b236ff2e7ed5e759c44f701168822"
+}

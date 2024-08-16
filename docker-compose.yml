@@ -9,8 +9,104 @@ services:
       POSTGRES_PASSWORD: mypassword
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 1
+      start_period: 1s
     volumes:
       - ./.db:/var/lib/postgresql/data
+    networks:
+      - indexer_net
+
+  indexer:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+    networks:
+      - indexer_net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/metrics" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  vmagent:
+    container_name: vmagent
+    image: victoriametrics/vmagent:v1.102.1
+    depends_on:
+      - "indexer"
+      - "victoriametrics"
+    ports:
+      - 8429:8429
+    volumes:
+      - vmagentdata:/vmagentdata
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--promscrape.config=/etc/prometheus/prometheus.yml"
+      - "--remoteWrite.url=http://victoriametrics:8428/api/v1/write"
+    networks:
+      - indexer_net
+    restart: always
+
+  victoriametrics:
+    container_name: victoriametrics
+    image: victoriametrics/victoria-metrics:v1.102.1
+    ports:
+      - 8428:8428
+      - 8089:8089
+      - 8089:8089/udp
+      - 2003:2003
+      - 2003:2003/udp
+      - 4242:4242
+    volumes:
+      - vmdata:/storage
+    command:
+      - "--storageDataPath=/storage"
+      - "--graphiteListenAddr=:2003"
+      - "--opentsdbListenAddr=:4242"
+      - "--httpListenAddr=:8428"
+      - "--influxListenAddr=:8089"
+    networks:
+      - indexer_net
+    restart: always
+
+  # Grafana instance configured with VictoriaMetrics as datasource
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:10.4.2
+    depends_on:
+      - "victoriametrics"
+    ports:
+      - 3001:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./grafana/provisioning/datasources/prometheus-datasource:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards/victoriametrics.json:/var/lib/grafana/dashboards/vm.json
+      - ./grafana/dashboards/vmagent.json:/var/lib/grafana/dashboards/vmagent.json
+    networks:
+      - indexer_net
+    restart: always
 
 volumes:
-  postgres_data:
+  postgres_data: {}
+  vmagentdata: {}
+  vmdata: {}
+  grafanadata: {}
+
+networks:
+  indexer_net:
+    driver: bridge
