@@ -115,6 +115,9 @@ services:
              npx prisma studio"
     environment:
       - NODE_ENV=development
+    networks:
+      - indexer_net
+    restart: always
 
 volumes:
   postgres_data: {}
