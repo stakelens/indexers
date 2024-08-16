@@ -103,11 +103,9 @@ services:
 
   prisma-studio:
     image: node:22-alpine
-    depends_on:
-      - db
-    working_dir: /app
+    working_dir: /indexers
     volumes:
-      - prisma-studio:/app
+      - ./prisma:/indexers
     ports:
       - "5555:5555"
     command: >
