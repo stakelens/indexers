@@ -101,11 +101,25 @@ services:
       - indexer_net
     restart: always
 
+  prisma-studio:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - prisma-studio:/app
+    ports:
+      - "5555:5555"
+    command: >
+      sh -c "npm install prisma &&
+             npx prisma studio"
+    environment:
+      - NODE_ENV=development
+
 volumes:
   postgres_data: {}
   vmagentdata: {}
   vmdata: {}
   grafanadata: {}
+  prisma-studio: {}
 
 networks:
   indexer_net:
