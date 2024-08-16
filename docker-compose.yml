@@ -104,6 +104,8 @@ services:
   prisma-studio:
     image: node:22-alpine
     working_dir: /indexers
+    env_file:
+      - .env
     volumes:
       - ./prisma:/indexers
     ports:
