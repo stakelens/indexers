@@ -2,6 +2,7 @@ mod db;
 mod handlers;
 
 use ghost_crab::prelude::*;
+use handlers::beacon_deposit;
 use handlers::etherfi;
 use handlers::lido;
 use handlers::mantle;
@@ -64,6 +65,11 @@ async fn main() {
 
     indexer
         .load_block_handler(prices::RPLUSDCUniswapTWAP::new())
+        .await
+        .unwrap();
+
+    indexer
+        .load_block_handler(beacon_deposit::BeaconDeposit::new())
         .await
         .unwrap();
 

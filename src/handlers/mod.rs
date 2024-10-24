@@ -1,3 +1,4 @@
+pub mod beacon_deposit;
 pub mod etherfi;
 pub mod lido;
 pub mod mantle;

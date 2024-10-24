@@ -78,11 +78,18 @@ model Stader {
 
 // Dashboard Models
 model UniswapTWAP {
-  base_token String
+  base_token  String
   quote_token String
-  
-  price Float
+
+  price           Float
   block_timestamp BigInt
 
   @@id([base_token, quote_token, block_timestamp])
+}
+
+model BeaconDeposit {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
 }

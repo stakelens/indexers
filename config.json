@@ -21,6 +21,11 @@
     }
   },
   "blockHandlers": {
+    "BeaconDeposit": {
+      "startBlock": 11052984,
+      "network": "ethereum",
+      "step": 720
+    },
     "RocketPool": {
       "startBlock": 19796144,
       "network": "ethereum",
