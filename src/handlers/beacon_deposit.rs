@@ -1,5 +1,6 @@
 use crate::db;
 
+use alloy::eips::BlockId;
 use ghost_crab::prelude::*;
 use log::{error, info};
 
@@ -12,7 +13,13 @@ async fn BeaconDeposit(ctx: BlockContext) {
     let block = ctx.block(false).await.unwrap().unwrap();
     let block_timestamp = block.header.timestamp as i64;
 
-    let balance = ctx.provider.get_balance(BEACON_DEPOSIT).await.unwrap();
+    let balance = ctx
+        .provider
+        .get_balance(BEACON_DEPOSIT)
+        .block_id(BlockId::number(ctx.block_number))
+        .await
+        .unwrap();
+
     let eth = balance.to_string();
 
     let result = sqlx::query!(
