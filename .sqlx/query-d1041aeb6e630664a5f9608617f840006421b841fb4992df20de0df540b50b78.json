@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"BeaconDeposit\" (block_number, block_timestamp, eth)\n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d1041aeb6e630664a5f9608617f840006421b841fb4992df20de0df540b50b78"
+}
