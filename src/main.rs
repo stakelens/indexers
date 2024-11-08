@@ -68,10 +68,5 @@ async fn main() {
         .await
         .unwrap();
 
-    indexer
-        .load_block_handler(beacon_deposit::BeaconDeposit::new())
-        .await
-        .unwrap();
-
     indexer.start().await.unwrap();
 }
