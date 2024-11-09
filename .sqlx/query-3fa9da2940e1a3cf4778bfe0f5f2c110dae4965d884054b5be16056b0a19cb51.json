@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO \"CbETHBase\" (block_number, block_timestamp, eth)\n           VALUES ($1, $2, $3)\n           ON CONFLICT (block_number) DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3fa9da2940e1a3cf4778bfe0f5f2c110dae4965d884054b5be16056b0a19cb51"
+}
