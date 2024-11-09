@@ -2,7 +2,7 @@ mod db;
 mod handlers;
 
 use ghost_crab::prelude::*;
-use handlers::beacon_deposit;
+use handlers::coinbase;
 use handlers::etherfi;
 use handlers::lido;
 use handlers::mantle;
@@ -65,6 +65,16 @@ async fn main() {
 
     indexer
         .load_block_handler(prices::RPLUSDCUniswapTWAP::new())
+        .await
+        .unwrap();
+
+    indexer
+        .load_block_handler(coinbase::CbETHBlockHandler::new())
+        .await
+        .unwrap();
+
+    indexer
+        .load_block_handler(coinbase::CbETHBaseBlockHandler::new())
         .await
         .unwrap();
 

@@ -93,3 +93,17 @@ model BeaconDeposit {
 
   eth String
 }
+
+model CbETH {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}
+
+model CbETHBase {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+
+  eth String
+}

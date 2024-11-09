@@ -1,4 +1,5 @@
 pub mod beacon_deposit;
+pub mod coinbase;
 pub mod etherfi;
 pub mod lido;
 pub mod mantle;

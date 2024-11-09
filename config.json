@@ -26,6 +26,16 @@
       "network": "ethereum",
       "step": 720
     },
+    "CbETH": {
+      "startBlock": 18476729,
+      "network": "ethereum",
+      "step": 720
+    },
+    "CbETHBase": {
+      "startBlock": 20047255,
+      "network": "base",
+      "step": 720
+    },
     "RocketPool": {
       "startBlock": 19796144,
       "network": "ethereum",
@@ -79,6 +89,10 @@
     },
     "optimism": {
       "rpcUrl": "$OPT_RPC_URL",
+      "requestsPerSecond": 300
+    },
+    "base": {
+      "rpcUrl": "$BASE_RPC_URL",
       "requestsPerSecond": 300
     }
   }
